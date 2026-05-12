@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smart To-Do App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    *{box-sizing:border-box ;}
+   
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f6fb;
+    padding:20px;
+}
+.container{
+    max-width:700px;
+    margin:auto;
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 0 30px rgba(3, 5, 123, 0.3);
+}
+.add-task{
+    display:flex;
+    gap:8px;
+    margin-bottom:20px;
+    flex-wrap: wrap;
+}
+.add-task input,.add-task select{
+    padding:8px;
+    flex:1;
+}
+#taskDate {
+    flex: 0.7;       /* smaller */
+    min-width: 120px;
+}
+#taskwork {
+    flex: 0.7;       /* smaller */
+    min-width: 120px;
+}
+.add-task button{
+    background:#4710c7;
+    color:#fff;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    flex: 1.0;       /* bigger */
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #1e3ecb, #764ba2);
+}
+.filters button{
+    padding:6px 12px;
+    margin-right:5px;
+    border:none;
+    cursor:pointer;
+    border-radius:5px;
+}
+.filters .active{
+    background:#5f57f6;
+    color:white;
+}
+.task {
+    display: flex;
+    flex-direction: column; /* 🔥 stack */
+    gap: 10px;
+    background: #f9f9f9;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 8px;
+}
+
+.task div {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+.task button {
+    flex: 1;
+    padding: 8px;
+    font-size: 14px;
+
+}
+.task.done span{
+    text-decoration:line-through;
+    color:rgb(137, 124, 124);
+
+}
+
+
+
+.tag{
+    background:#ddd;
+    padding:3px 6px;
+    font-size:12px;
+    border-radius:4px;
+    margin-left:10px;
+}
+.delete{
+    color:red;
+    cursor:pointer;
+}
+.delete-all{
+    width:100%;
+    margin-top:15px;
+    padding:10px;
+    background:#da3246;
+    color:white;
+    border:none;
+    border-radius:5px;
+}
+small{color:gray}
+
+.container {
+    max-width: 700px;
+    margin: auto;
+    background: #fff;
+    padding: 15px;
+    border-radius: 12px;
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 12px;
+    }
+}
+
+   
+/* Manage Categories */
+.manage-categories {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 25px;
+    box-shadow: 0 15px 35px rgba(5, 5, 123, 0.3);
+    margin: 30px auto;
+    max-width: 700px;
+    width: 95%;
+}
+
+.manage-categories h2 {
+    font-size: 2rem;
+    margin-bottom: 25px;
+    color: #222;
+}
+
+.category-input-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.category-input-group input {
+    flex: 1;
+    padding: 18px 20px;
+    border: 2px solid #ddd;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    outline: none;
+    transition: 0.3s;
+}
+
+.category-input-group input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+}
+
+.category-input-group button {
+    padding: 18px 35px;
+    border: none;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #1e3ecb, #764ba2);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.category-input-group button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(9, 11, 121, 0.3);
+}
+
+.categories-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.category-tag {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f5f7ff;
+    color: #333;
+    padding: 12px 20px;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    animation: fadeIn 0.3s ease;
+}
+
+.category-tag button {
+    background: none;
+    border: none;
+    color: #ff4d4d;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.category-tag button:hover {
+    transform: scale(1.2);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .category-input-group {
+        flex-direction: column;
+    }
+
+    .category-input-group button {
+        width: 100%;
+    }
+
+    .manage-categories h2 {
+        font-size: 1.6rem;
+    }
+}
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+.actions button {
+    flex: 1;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+
+
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.actions button {
+    flex: 1;
+    border: none;
+    border-radius: 50px; /* 🔥 pill shape */
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(5px);
+}
+
+/* ✏️ Edit */
+.edit-btn {
+    background: rgba(76, 110, 245, 0.1);
+    color: #4c6ef5;
+}
+
+.edit-btn:hover {
+    background: #4c6ef5;
+    color: white;
+    box-shadow: 0 4px 12px rgba(76, 110, 245, 0.4);
+}
+
+/* ✔️ Done */
+.done-btn {
+    background: rgba(46, 204, 113, 0.1);
+    color: #2f9e44;
+}
+
+.done-btn:hover {
+    background: #2f9e44;
+    color: white;
+    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+}
+
+/* 🗑️ Delete */
+.delete-btn {
+    background: rgba(255, 99, 132, 0.1);
+    color: #e03131;
+}
+
+.delete-btn:hover {
+    background: #e03131;
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 99, 132, 0.4);
+}
+
+/* Click animation */
+.actions button:active {
+    transform: scale(0.92);
+}
+
+button {
+    min-height: 40px; /* 👈 important for mobile */
+}
+
+/* 📱 Fix filter buttons merging */
+.filters {
+    display: flex;
+    flex-wrap: wrap;   /* 👈 allows wrapping */
+    gap: 8px;          /* 👈 spacing between buttons */
+}
+
+.filters button {
+    margin-right: 0;   /* remove old spacing */
+    flex: 1 1 auto;    /* responsive width */
+    min-width: 80px;   /* prevents too small buttons */
+    text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>➕ Add New Task</h2>
+
+<div class="add-task">
+    <input type="text" id="taskText" placeholder="Task name">
+    <select id="category">
+        <option>Work</option>
+        <option>Personal</option>
+        <option>Urgent</option>
+        <option>Un-categorized</option>
+    </select>
+    <input type="date" id="taskDate">
+    <button onclick="addTask()">Add</button>
+</div>
+
+<h3>Your Tasks</h3>
+<div class="filters">
+    <button class="active" onclick="setFilter('All',this)">All</button>
+    <button onclick="setFilter('Work',this)">Work</button>
+    <button onclick="setFilter('Personal',this)">Personal</button>
+    <button onclick="setFilter('Urgent',this)">Urgent</button>
+    <button onclick="setFilter('Un-categorized',this)">Un-categorized</button>
+
+</div>
+
+<div id="taskList"></div>
+
+<button class="delete-all" onclick="deleteAll()">❌ Delete All</button>
+</div>
+
+<!-- Manage Categories Section -->
+
+<div class="manage-categories">
+    <h2>🏷️ Manage Categories</h2>
+
+    <div class="category-input-group">
+        <input
+            type="text"
+            id="newCategory"
+            placeholder="New category name"
+        >
+        <button id="addCategoryBtn">Add Category</button>
+    </div>
+
+    <div id="categoriesList" class="categories-list"></div>
+</div>
+
+<script>
+    let editingId = null;
+// ===== GET ELEMENTS =====
+const taskList = document.getElementById("taskList");
+const taskText = document.getElementById("taskText");
+const taskDate = document.getElementById("taskDate");
+const categorySelect = document.getElementById("category");
+
+// ===== DATA =====
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let filter = "All";
+
+// ===== ADD TASK =====
+function addTask() {
+    const text = taskText.value.trim();
+    const date = taskDate.value;
+    const category = categorySelect.value;
+
+    if (!text || !date) {
+        alert("Fill all fields");
+        return;
+    }
+
+    if (editingId !== null) {
+        // ✏️ UPDATE TASK
+        const task = tasks.find(t => t.id === editingId);
+
+        task.text = text;
+        task.date = date;
+        task.category = category;
+
+        editingId = null;
+        document.querySelector(".add-task button").textContent = "Add";
+    } else {
+        // ➕ ADD NEW TASK
+        tasks.push({
+            id: Date.now(),
+            text,
+            date,
+            category,
+            done: false
+        });
+    }
+
+    taskText.value = "";
+    taskDate.value = "";
+
+    save();
+}
+// ===== RENDER TASKS =====
+function render() {
+    taskList.innerHTML = "";
+
+    const filtered = tasks.filter(
+        t => filter === "All" || t.category === filter
+    );
+
+    if (filtered.length === 0) {
+        taskList.innerHTML = "<p>No tasks</p>";
+        return;
+    }
+
+    filtered.forEach(t => {
+        const div = document.createElement("div");
+        div.className = "task" + (t.done ? " done" : "");
+
+        div.innerHTML = `
+            <span>
+                ${t.text}
+                <small> (${t.date})</small>
+                <span class="tag">${t.category}</span>
+            </span>
+
+           <div class="actions">
+    <button class="edit-btn" onclick="editTask(${t.id})">✏️</button>
+    <button class="done-btn" onclick="toggle(${t.id})">
+        ${t.done ? "↩️" : "✔️"}
+    </button>
+    <button class="delete-btn" onclick="del(${t.id})">🗑️</button>
+</div>
+        `;
+
+        taskList.appendChild(div);
+    });
+}
+function editTask(id) {
+    const task = tasks.find(t => t.id === id);
+
+    if (!task) return;
+
+    taskText.value = task.text;
+    taskDate.value = task.date;
+    categorySelect.value = task.category;
+
+    editingId = id;
+
+    document.querySelector(".add-task button").textContent = "Update Task";
+}
+
+// ===== TOGGLE =====
+function toggle(id) {
+    const task = tasks.find(t => t.id === id);
+    task.done = !task.done;
+    save();
+}
+
+// ===== DELETE =====
+function del(id) {
+    tasks = tasks.filter(t => t.id !== id);
+    save();
+}
+
+// ===== DELETE ALL =====
+function deleteAll() {
+    if (confirm("Delete all tasks?")) {
+        tasks = [];
+        save();
+    }
+}
+
+// ===== FILTER =====
+function setFilter(f, btn) {
+    filter = f;
+
+    document.querySelectorAll(".filters button")
+        .forEach(b => b.classList.remove("active"));
+
+    btn.classList.add("active");
+
+    render();
+}
+
+// ===== SAVE =====
+function save() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    render();
+}
+
+// ===== INIT =====
+render();
+// ===== CATEGORY SYSTEM (CLEAN VERSION) =====
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const defaultCategories = ["Work", "Personal", "Urgent", "Un-categorized"];
+
+    let categories = JSON.parse(localStorage.getItem("categories"));
+
+    if (!Array.isArray(categories) || categories.length === 0) {
+        categories = [...defaultCategories];
+        localStorage.setItem("categories", JSON.stringify(categories));
+    }
+
+    const addCategoryBtn = document.getElementById("addCategoryBtn");
+    const newCategoryInput = document.getElementById("newCategory");
+    const categoriesList = document.getElementById("categoriesList");
+    const categorySelect = document.getElementById("category");
+
+    function renderCategories() {
+    categoriesList.innerHTML = "";
+
+    // show custom categories only in manage section
+    categories.forEach(cat => {
+        if (defaultCategories.includes(cat)) return;
+
+        const div = document.createElement("div");
+        div.className = "category-tag";
+
+        div.innerHTML = `
+            ${cat}
+            <button data-cat="${cat}" class="delete-cat">✖</button>
+        `;
+
+        categoriesList.appendChild(div);
+    });
+
+    // update dropdown
+    categorySelect.innerHTML = "";
+    categories.forEach(cat => {
+        const option = document.createElement("option");
+        option.textContent = cat;
+        option.value = cat;
+        categorySelect.appendChild(option);
+    });
+
+    // update filter buttons
+    const filtersDiv = document.querySelector(".filters");
+    filtersDiv.innerHTML = "";
+
+    const allBtn = document.createElement("button");
+    allBtn.textContent = "All";
+    if (filter === "All") allBtn.classList.add("active");
+    allBtn.onclick = function () {
+        setFilter("All", this);
+    };
+    filtersDiv.appendChild(allBtn);
+
+    categories.forEach(cat => {
+        const btn = document.createElement("button");
+        btn.textContent = cat;
+        if (filter === cat) btn.classList.add("active");
+        btn.onclick = function () {
+            setFilter(cat, this);
+        };
+        filtersDiv.appendChild(btn);
+    });
+}
+    addCategoryBtn.addEventListener("click", () => {
+        const newCat = newCategoryInput.value.trim();
+
+        if (!newCat) return alert("Enter category name");
+        if (categories.includes(newCat)) return alert("Already exists");
+
+        categories.push(newCat);
+        newCategoryInput.value = "";
+
+        saveCategories();
+    });
+
+    // ✅ FIXED delete (no inline error)
+    categoriesList.addEventListener("click", (e) => {
+        if (e.target.classList.contains("delete-cat")) {
+            const cat = e.target.getAttribute("data-cat");
+
+            if (defaultCategories.includes(cat)) {
+                alert("Default categories cannot be deleted");
+                return;
+            }
+
+            categories = categories.filter(c => c !== cat);
+            saveCategories();
+        }
+    });
+
+    function saveCategories() {
+        localStorage.setItem("categories", JSON.stringify(categories));
+        renderCategories();
+    }
+
+    renderCategories();
+
+});
+</script>
+
+</body>
+</html>
